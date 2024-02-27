@@ -16,10 +16,8 @@ const Presstagram = () => {
     console.log(`Request sent for image: ${imageName}`);
     fetch(`http://localhost:5000/print/${imageName}`, {
       method: 'GET',
-    })
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error("Failed to send request", error));
+      mode: 'no-cors',
+    }).catch(error => console.error("Failed to send request", error));
   };
 
   return (
