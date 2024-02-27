@@ -1,0 +1,13 @@
+[flask]
+debug = false
+host = "localhost"
+
+[presstagram]
+background_image_path = "backgrounds/background.png"
+posts_dir = "posts/"
+headers_path = "headers.json"
+hashtag = "frcturkey"
+number_of_posts = 50
+image_quality = 80
+image_base_width = 800
+image_paste_coordinates = [140, 580]
