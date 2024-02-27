@@ -163,6 +163,7 @@ class Presstagram:
         if os.name != "nt":
             print(f"Would print: {image_path}")
             return
+        print(f"Printing: {image_path}")
         printer_name = win32print.GetDefaultPrinter()
         hDC = win32ui.CreateDC()
         hDC.CreatePrinterDC(printer_name)
