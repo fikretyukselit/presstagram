@@ -1,8 +1,8 @@
 import datetime
 import json
+import os
 import shutil
 from pathlib import Path
-import os
 
 import requests
 
@@ -10,6 +10,7 @@ if os.name == "nt":
     import win32print
     import win32ui
     from PIL import Image, ImageWin
+
 from PIL import Image
 
 
@@ -174,4 +175,3 @@ class Presstagram:
         hDC.EndPage()
         hDC.EndDoc()
         hDC.DeleteDC()
-        
