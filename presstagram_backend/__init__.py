@@ -70,7 +70,7 @@ def update_posts():
     return enable_cors(jsonify({"success": True, "message": "images updated from instagram"}))
 
 
-@app.route("/config/update")
+@app.route("/config/reload")
 def config_update():
     global config
     global presstagram_config
