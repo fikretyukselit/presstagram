@@ -14,11 +14,24 @@ const Presstagram = () => {
 
   const handleClick = (imageName) => {
     console.log(`Request sent for image: ${imageName}`);
-    fetch(`http://localhost:5000/print/${imageName}`, {
-      method: 'GET',
-      mode: 'no-cors',
-    }).catch(error => console.error("Failed to send request", error));
+    fetch(`http://localhost:5000/print/${imageName}`)
+      .catch(error => console.error("Failed to send request", error));
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch('http://localhost:5000/update_posts')
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error("Failed request an update", error));
+      fetch('http://localhost:5000/images')
+        .then(response => response.json())
+        .then(data => setImages(data.images))
+        .then(() => console.log("Images updated"))
+        .catch(error => console.error("Failed to load images", error));
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
