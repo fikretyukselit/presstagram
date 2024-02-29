@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from pprint import pprint
 
 import tomlkit
 from flask import Flask, jsonify, send_from_directory
@@ -13,68 +14,95 @@ config = tomlkit.parse(Path(CONFIG_PATH).read_text("utf-8"))
 flask_config = config["flask"]
 presstagram_config = config["presstagram"]
 
-HEADERS_PATH = os.path.join(PROJECT_ROOT, presstagram_config["headers_path"])
-BACKGROUND_IMAGE_PATH = os.path.join(
+headers_path = os.path.join(PROJECT_ROOT, presstagram_config["headers_path"])
+background_image_path = os.path.join(
     PROJECT_ROOT, presstagram_config["background_image_path"]
 )
-POSTS_DIR = os.path.join(PROJECT_ROOT, presstagram_config["posts_dir"])
+posts_dir = os.path.join(PROJECT_ROOT, presstagram_config["posts_dir"])
 
-presstagram = Presstagram(
-    HEADERS_PATH,
-    BACKGROUND_IMAGE_PATH,
-    POSTS_DIR,
+presstagram_instance = Presstagram(
+    headers_path,
+    background_image_path,
+    posts_dir,
 )
 
 app = Flask(__name__)
 
 
+def enable_cors(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 @app.route("/images/<filename>")
 def serve_image(filename):
-    return send_from_directory(POSTS_DIR, filename)
+    return enable_cors(send_from_directory(posts_dir, filename))
 
 
 @app.route("/images")
 def images():
     image_files = sorted(
-        [image for image in os.listdir(POSTS_DIR) if image.endswith(".png")],
+        [image for image in os.listdir(posts_dir) if image.endswith(".png")],
         reverse=True,
     )
-    response = jsonify({"images": image_files})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    return enable_cors(jsonify({"success": True, "images": image_files}))
 
 
 @app.route("/print/<image_name>")
-def print_image(image_name):
+def print_image(image_name: str):
     if image_name:
-        presstagram.print_image(os.path.join(POSTS_DIR, image_name))
-        return jsonify({"success": True})
-    return jsonify({"success": False, "message": "No image name provided"})
+        presstagram_instance.print_image(os.path.join(posts_dir, image_name))
+        return enable_cors(jsonify({"success": True}))
+    return enable_cors(jsonify({"success": False, "message": "no image name provided"}))
 
 
-@app.route("/update")
-def update():
-    if presstagram.in_progress:
-        return jsonify({"success": False, "in_progress": True})
-    presstagram.update_posts(
+@app.route("/update_posts")
+def update_posts():
+    if presstagram_instance.in_progress:
+        return enable_cors(jsonify({"success": False, "message": "in progress"}))
+    presstagram_instance.update_posts(
         presstagram_config["hashtag"],
         presstagram_config["number_of_posts"],
         presstagram_config["image_quality"],
         presstagram_config["image_base_width"],
         tuple(presstagram_config["image_paste_coordinates"]),
     )
-    return jsonify({"success": True})
+    return enable_cors(jsonify({"success": True, "message": "images updated from instagram"}))
 
+
+@app.route("/config/update")
+def config_update():
+    global config
+    global presstagram_config
+    config = tomlkit.parse(Path(CONFIG_PATH).read_text("utf-8"))
+    presstagram_config = config["presstagram"]
+    return enable_cors(jsonify({"success": True, "message": "config updated"}))
+
+@app.route("/config/read")
+def config_read():
+    return enable_cors(jsonify({"success": True, "config": config}))
+
+@app.route("/reload_presstagram")
+def reload_presstagram():
+    global presstagram_instance
+    presstagram_instance_backup = presstagram_instance
+    presstagram_instance = Presstagram(
+        headers_path,
+        background_image_path,
+        posts_dir,
+    )
+    presstagram_instance.in_progress = presstagram_instance_backup.in_progress
+    del presstagram_instance_backup
+    return enable_cors(jsonify({"success": True, "message": "presstagram reloaded"}))
 
 def main():
-    print(f"HEADERS_PATH: {HEADERS_PATH}")
     print(f"CONFIG_PATH: {CONFIG_PATH}")
-    print(f"HEADERS_PATH: {HEADERS_PATH}")
-    print(f"BACKGROUND_IMAGE_PATH: {BACKGROUND_IMAGE_PATH}")
-    print(f"POSTS_DIR: {POSTS_DIR}")
-    print({k: v for k, v in config.items()})
+    print(f"HEADERS_PATH: {headers_path}")
+    print(f"BACKGROUND_IMAGE_PATH: {background_image_path}")
+    print(f"POSTS_DIR: {posts_dir}")
+    pprint({k: v for k, v in config.items()})
 
     with app.app_context():
-        update()
+        update_posts()
 
     app.run(host=flask_config["host"], debug=flask_config["debug"], port=5000)
