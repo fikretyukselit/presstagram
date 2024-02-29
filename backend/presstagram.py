@@ -9,7 +9,7 @@ import requests
 if os.name == "nt":
     import win32print
     import win32ui
-    from PIL import Image, ImageWin
+    from PIL import ImageWin
 
 from PIL import Image
 
@@ -176,3 +176,6 @@ class Presstagram:
         hDC.EndPage()
         hDC.EndDoc()
         hDC.DeleteDC()
+
+if __name__ == "__main__":
+    print("This is a module, please don't run it directly. Use ``python -m backend`` from the project root.")

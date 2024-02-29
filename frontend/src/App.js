@@ -3,7 +3,7 @@ import Presstagram from './Presstagram';
 
 function App() {
   return (
-    <div className="App">
+    <div className="presstagram">
       <Presstagram />
     </div>
   );

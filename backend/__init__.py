@@ -67,7 +67,9 @@ def update_posts():
         presstagram_config["image_base_width"],
         tuple(presstagram_config["image_paste_coordinates"]),
     )
-    return enable_cors(jsonify({"success": True, "message": "images updated from instagram"}))
+    return enable_cors(
+        jsonify({"success": True, "message": "images updated from instagram"})
+    )
 
 
 @app.route("/config/reload")
@@ -78,9 +80,11 @@ def config_update():
     presstagram_config = config["presstagram"]
     return enable_cors(jsonify({"success": True, "message": "config updated"}))
 
+
 @app.route("/config/read")
 def config_read():
     return enable_cors(jsonify({"success": True, "config": config}))
+
 
 @app.route("/reload_presstagram")
 def reload_presstagram():
@@ -95,6 +99,7 @@ def reload_presstagram():
     del presstagram_instance_backup
     return enable_cors(jsonify({"success": True, "message": "presstagram reloaded"}))
 
+
 def main():
     print(f"CONFIG_PATH: {CONFIG_PATH}")
     print(f"HEADERS_PATH: {headers_path}")
@@ -106,3 +111,6 @@ def main():
         update_posts()
 
     app.run(host=flask_config["host"], debug=flask_config["debug"], port=5000)
+
+if __name__ == "__main__":
+    main()

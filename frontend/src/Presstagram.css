@@ -5,13 +5,13 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #E1CC47;
 }
 
 body::-webkit-scrollbar-thumb {
     background: #642682;
     border-radius: 10px;
-    border: 3px solid #f1f1f1;
+    border: 5px solid #5056A0;
 }
 
 body {

@@ -13,6 +13,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
+*.zip
 
 # logs
 *.log
@@ -30,5 +31,5 @@ headers.json
 *.spec
 
 # exceptions
-!presstagram_frontend/src/*.png
-!presstagram_frontend/public/*.png
+!frontend/src/*.png
+!frontend/public/*.png

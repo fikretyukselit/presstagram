@@ -3,7 +3,7 @@ debug = false
 host = "localhost"
 
 [presstagram]
-background_image_path = "backgrounds/background.png"
+background_image_path = "backgrounds/frc-24.png"
 posts_dir = "posts/"
 headers_path = "headers.json"
 hashtag = "frcturkey"
