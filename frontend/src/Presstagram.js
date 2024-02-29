@@ -4,6 +4,9 @@ import logo from "./yatay_logo.png";
 
 const Presstagram = () => {
   const [images, setImages] = useState([]);
+  const [lastPrintTime, setLastPrintTime] = useState(0);
+  const [printDelay] = useState(15000);
+  const [showCooldownWarning, setShowCooldownWarning] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:5000/images")
@@ -13,10 +16,21 @@ const Presstagram = () => {
   }, []);
 
   const handleClick = (imageName) => {
-    console.log(`Request sent for image: ${imageName}`);
-    fetch(`http://localhost:5000/print/${imageName}`).catch((error) =>
-      console.error("Failed to send request", error),
-    );
+    const currentTime = new Date().getTime();
+    if (currentTime - lastPrintTime > printDelay) {
+      setLastPrintTime(currentTime);
+      setShowCooldownWarning(false);
+      console.log(`Request sent for image: ${imageName}`);
+      fetch(`http://localhost:5000/print/${imageName}`).catch((error) =>
+        console.error("Failed to send request", error),
+      );
+    } else {
+      setShowCooldownWarning(true);
+    }
+  };
+
+  const handleCloseWarning = () => {
+    setShowCooldownWarning(false);
   };
 
   useEffect(() => {
@@ -46,6 +60,15 @@ const Presstagram = () => {
           <div className="brand-text">Presstagram</div>
         </div>
       </nav>
+      {showCooldownWarning && (
+        <div className="cooldown-overlay">
+          <div className="cooldown-warning">
+            <div className="emoji-large">😉</div>
+            <p>Please wait a bit before printing another image.</p>
+            <button onClick={handleCloseWarning}>Close</button>
+          </div>
+        </div>
+      )}
       <div className="gallery">
         {images.map((imageName, index) => (
           <div
