@@ -110,7 +110,8 @@ def main():
     with app.app_context():
         update_posts()
 
-    app.run(host=flask_config["host"], debug=flask_config["debug"], port=5000)
+    app.run(host="localhost", debug=flask_config["debug"], port=5000)
+
 
 if __name__ == "__main__":
     main()

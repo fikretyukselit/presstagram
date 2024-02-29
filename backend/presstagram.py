@@ -177,5 +177,8 @@ class Presstagram:
         hDC.EndDoc()
         hDC.DeleteDC()
 
+
 if __name__ == "__main__":
-    print("This is a module, please don't run it directly. Use ``python -m backend`` from the project root.")
+    raise NotImplementedError(
+        "This module is not meant to be executed directly. Use ``python -m backend`` from the project root."
+    )

@@ -29,7 +29,9 @@ headers.json
 # python
 **/__pycache__/
 *.spec
+**/.ruff_cache
 
 # exceptions
 !frontend/src/*.png
 !frontend/public/*.png
+!backgrounds/*.png

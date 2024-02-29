@@ -1,6 +1,5 @@
 [flask]
 debug = false
-host = "localhost"
 
 [presstagram]
 background_image_path = "backgrounds/frc-24.png"
