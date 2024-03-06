@@ -134,16 +134,17 @@ class Presstagram:
 
     def update_posts(
         self,
-        hashtag: str,
+        hashtags: list[str,],
         number_of_posts: int,
         image_quality: int,
         image_base_width: int,
         image_paste_coordinates: tuple,
     ) -> None:
         self.in_progress = True
-        posts_to_have = self.__which_posts_to_have(
-            self.__get_recent_posts(hashtag), number_of_posts
-        )
+        recent_posts = ()
+        for hashtag in hashtags:
+            recent_posts += self.__get_recent_posts(hashtag)
+        posts_to_have = self.__which_posts_to_have(recent_posts, number_of_posts)
         for post in posts_to_have:
             if Path(self.download_dir / f"{post[0]}-{post[1]}.png").is_file():
                 print(f"Already have: {post[0]}-{post[1]}.png")

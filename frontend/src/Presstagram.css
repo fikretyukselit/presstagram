@@ -141,3 +141,43 @@ body {
   font-size: 48px;
   margin-bottom: 20px;
 }
+
+.refresh-button {
+  font-size: 82px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  color: #007bff;
+  position: absolute;
+  left: 20px;
+  top: 15px;
+  border-radius: 50%;
+  padding: 5px 10px;
+  transition:
+    transform 0.2s ease-in-out,
+    color 0.2s ease;
+}
+
+.refresh-button:hover,
+.refresh-button:focus {
+  color: #0056b3;
+  transform: scale(1.1);
+  outline: none;
+}
+
+.refresh-button:active {
+  transform: scale(0.9);
+}
+
+.refresh-button-loading {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

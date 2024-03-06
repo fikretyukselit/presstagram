@@ -7,12 +7,37 @@ const Presstagram = () => {
   const [lastPrintTime, setLastPrintTime] = useState(0);
   const [printDelay] = useState(15000);
   const [showCooldownWarning, setShowCooldownWarning] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchImages = (callback) => {
+    fetch("http://localhost:5000/update_posts")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.message);
+        fetch("http://localhost:5000/images")
+          .then((response) => response.json())
+          .then((data) => {
+            setImages(data.images);
+            console.log("Images updated");
+            if (callback) callback();
+          })
+          .catch((error) => {
+            console.error("Failed to load images", error);
+            if (callback) callback();
+          });
+      })
+      .catch((error) => {
+        console.error("Failed request an update", error);
+        if (callback) callback();
+      });
+  };
 
   useEffect(() => {
-    fetch("http://localhost:5000/images")
-      .then((response) => response.json())
-      .then((data) => setImages(data.images))
-      .catch((error) => console.error("Failed to load images", error));
+    fetchImages();
+    const interval = setInterval(() => {
+      fetchImages();
+    }, 90000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleClick = (imageName) => {
@@ -33,23 +58,24 @@ const Presstagram = () => {
     setShowCooldownWarning(false);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetch("http://localhost:5000/update_posts")
-        .then((response) => response.json())
-        .then((data) => console.log(data.message))
-        .catch((error) => console.error("Failed request an update", error));
-      fetch("http://localhost:5000/images")
-        .then((response) => response.json())
-        .then((data) => setImages(data.images))
-        .then(() => console.log("Images updated"))
-        .catch((error) => console.error("Failed to load images", error));
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  const handleRefresh = () => {
+    setIsLoading(true);
+    fetchImages(() => {
+      setIsLoading(false);
+      window.location.reload();
+    });
+  };
 
   return (
     <>
+      <button
+        onClick={handleRefresh}
+        className={`refresh-button ${
+          isLoading ? "refresh-button-loading" : ""
+        }`}
+      >
+        🔄
+      </button>
       <nav className="navbar">
         <div className="navbar-brand">
           <img

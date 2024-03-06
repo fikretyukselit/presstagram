@@ -52,7 +52,7 @@ You can configure the app by editing the `config.toml` file. Here are the availa
 - `background_image_path`: string - Path to the background image.
 - `posts_dir`: string - Path to the directory where the downloaded posts will be saved.
 - `headers_path`: string - Path to the JSON file that contains the headers for fetching the posts.
-- `hashtag`: string - The hashtag to search for.
+- `hashtags`: list of strings - The hashtags to be used to fetch the posts.
 - `number_of_posts`: integer - The number of posts to have in the machine. Older posts will be deleted when new posts are downloaded.
 - `image_quality`: integer (1-100) - The quality of the images to be saved.
 - `image_base_width`: integer (in pixels) - The width of the background's reserved space for the image to be pasted.

@@ -61,7 +61,7 @@ def update_posts():
     if presstagram_instance.in_progress:
         return enable_cors(jsonify({"success": False, "message": "in progress"}))
     presstagram_instance.update_posts(
-        presstagram_config["hashtag"],
+        presstagram_config["hashtags"],
         presstagram_config["number_of_posts"],
         presstagram_config["image_quality"],
         presstagram_config["image_base_width"],
